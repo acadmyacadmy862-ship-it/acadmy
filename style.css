@@ -8,8 +8,8 @@
 body {
     background-color: #050b14;
     color: #fff;
-    /*mn3 al-t2lym w al-motalaba ll-pc view*/
-    min-width: 1024px; 
+    width: 1200px; /* Thbet 3rd al-pc b-eltabt ll-mobyl w al-pc */
+    margin: 0 auto;
     overflow-x: auto;
 }
 
@@ -27,7 +27,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 1200px;
     z-index: 1000;
     padding: 12px 0;
 }
