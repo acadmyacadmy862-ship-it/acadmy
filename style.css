@@ -8,14 +8,15 @@
 body {
     background-color: #050b14;
     color: #fff;
-    overflow-x: hidden;
+    /*mn3 al-t2lym w al-motalaba ll-pc view*/
+    min-width: 1024px; 
+    overflow-x: auto;
 }
 
 .container {
-    width: 100%;
-    max-width: 1200px;
+    width: 1140px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 15px;
 }
 
 /* Navbar */
@@ -207,7 +208,7 @@ body {
     height: 35px;
 }
 
-/* Courses Section - 3 كروت جنب بعض دايماً بمرونة تامة */
+/* Courses Section - 3 جنب بعض زي الـ PC بالضبط */
 .courses-section {
     padding: 60px 0;
 }
