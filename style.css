@@ -8,13 +8,12 @@
 body {
     background-color: #050b14;
     color: #fff;
-    /*mn3 al-t2lym w al-motalaba ll-pc view*/
-    min-width: 1024px; 
-    overflow-x: auto;
+    overflow-x: hidden;
 }
 
 .container {
-    width: 1140px;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
@@ -29,7 +28,7 @@ body {
     left: 0;
     width: 100%;
     z-index: 1000;
-    padding: 12px 0;
+    padding: 10px 0;
 }
 
 .nav-container {
@@ -41,13 +40,13 @@ body {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 20px;
+    gap: 15px;
 }
 
 .nav-links a {
     color: #fff;
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     transition: 0.3s;
 }
 
@@ -58,24 +57,24 @@ body {
 .logo-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .brand-text h1 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #e0b12b;
     line-height: 1;
 }
 
 .brand-text span {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #aaa;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 
 .site-logo-svg {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -83,10 +82,10 @@ body {
 .admin-badge {
     background: #e0b12b;
     color: #000;
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 20px;
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-decoration: none;
 }
 
@@ -94,15 +93,15 @@ body {
     background: rgba(224, 177, 43, 0.15);
     border: 1px solid #e0b12b;
     color: #e0b12b;
-    padding: 6px 14px;
-    border-radius: 8px;
+    padding: 5px 10px;
+    border-radius: 6px;
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 /* Hero Section */
 .hero {
-    padding: 140px 0 60px 0;
+    padding: 120px 0 40px 0;
     min-height: 80vh;
     display: flex;
     align-items: center;
@@ -112,30 +111,32 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 40px;
+    gap: 30px;
+    flex-wrap: wrap; /* يمنع تداخل العناصر في الشاشات المتوسطة */
 }
 
 .hero-text-content {
     flex: 1;
+    min-width: 280px;
 }
 
 .pill-badge {
     background: rgba(224, 177, 43, 0.1);
     color: #e0b12b;
     display: inline-block;
-    padding: 6px 14px;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     border: 1px solid rgba(224, 177, 43, 0.3);
 }
 
 .main-title {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem); /* حجم خط متجاوب تلقائياً مع الشاشة */
     font-weight: 900;
     line-height: 1.2;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .main-title span {
@@ -144,20 +145,21 @@ body {
 
 .description {
     color: #ccc;
-    font-size: 1rem;
-    margin-bottom: 25px;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 .hero-buttons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .btn-gold {
     background: #e0b12b;
     color: #000;
-    padding: 12px 25px;
+    padding: 10px 20px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
@@ -171,7 +173,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
-    padding: 12px 25px;
+    padding: 10px 20px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
@@ -182,65 +184,65 @@ body {
     background: rgba(9, 21, 38, 0.85);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(224, 177, 43, 0.2);
-    border-radius: 16px;
-    padding: 25px;
+    border-radius: 14px;
+    padding: 20px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 
 .feature-card-3d {
     flex: 1;
+    min-width: 280px;
     text-align: center;
 }
 
 .inner-icon-box {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     background: rgba(224, 177, 43, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px auto;
+    margin: 0 auto 12px auto;
 }
 
 .hat-icon {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 }
 
-/* Courses Section - 3 جنب بعض زي الـ PC بالضبط */
+/* Courses Section */
 .courses-section {
-    padding: 60px 0;
+    padding: 40px 0;
 }
 
 .section-title {
     text-align: center;
-    font-size: 2rem;
-    margin-bottom: 40px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 30px;
     font-weight: 800;
 }
 
 .courses-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* أوتوماتيك لجميع الأجهزة */
     gap: 20px;
-    justify-content: center;
 }
 
 .course-card {
-    flex: 1;
     text-align: center;
 }
 
 .course-icon {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
+    font-size: 2.2rem;
+    margin-bottom: 12px;
 }
 
 .btn-select {
     background: transparent;
     border: 1px solid #e0b12b;
     color: #e0b12b;
-    padding: 8px 20px;
+    padding: 8px 15px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
@@ -255,7 +257,7 @@ body {
 
 /* Booking Section */
 .booking-section {
-    padding: 60px 0;
+    padding: 40px 0;
 }
 
 .booking-form-card {
@@ -265,35 +267,36 @@ body {
 
 .booking-form-card h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     color: #e0b12b;
+    font-size: 1.4rem;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
     color: #ccc;
 }
 
 .form-group input, .form-group select {
     width: 100%;
-    padding: 12px;
+    padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.2);
     background: rgba(0,0,0,0.3);
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .btn-full {
     width: 100%;
-    padding: 14px;
-    font-size: 1.1rem;
+    padding: 12px;
+    font-size: 1rem;
 }
 
 /* Scoreboard & Lessons */
@@ -302,35 +305,41 @@ body {
     justify-content: space-around;
     background: rgba(9, 21, 38, 0.8);
     border: 2px solid #e0b12b;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .score-box { 
     text-align: center; 
+    flex: 1;
+    min-width: 70px;
 }
 
 .score-number { 
-    font-size: 1.8rem; 
+    font-size: 1.3rem; 
     font-weight: 900; 
     color: #e0b12b; 
 }
 
 .score-label { 
-    font-size: 0.85rem; 
+    font-size: 0.7rem; 
     color: #ccc; 
 }
 
 .lesson-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(224, 177, 43, 0.2);
-    border-radius: 10px;
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .lesson-card.completed {
@@ -341,8 +350,32 @@ body {
 
 footer {
     text-align: center;
-    padding: 30px 0;
+    padding: 25px 0;
     border-top: 1px solid rgba(255,255,255,0.1);
     color: #888;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+}
+
+/* --- Media Queries للشاشات الصغيرة جداً والموبايلات --- */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* إخفاء الروابط التقليدية في الموبايل لعدم الزحمة وحفاظاً على التناسق */
+    }
+    
+    .hero {
+        padding-top: 100px;
+    }
+
+    .hero-container {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .container {
+        padding: 0 12px;
+    }
 }
