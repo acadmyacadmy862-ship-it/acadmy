@@ -52,22 +52,16 @@
             text-align: center;
         }
         .star-rating .star.active { color: #e0b12b; }
-        .days-checkboxes {
+        
+        .day-time-row {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 5px;
-        }
-        .day-label {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #444;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            gap: 5px;
             align-items: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #444;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -90,40 +84,6 @@
             </div>
             <textarea id="ratingComment" placeholder="ملاحظاتك أو تعليقك للمدرس (اختياري)..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #000; color: #fff; margin-bottom: 15px;"></textarea>
             <button onclick="submitTeacherRating()" class="btn-gold btn-full">إرسال التقييم 🚀</button>
-        </div>
-    </div>
-
-    <!-- Edit Course Modal -->
-    <div id="editCourseModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3 style="color: #e0b12b; text-align: center; margin-bottom: 15px;">✏️ تعديل بيانات المادة</h3>
-            <input type="hidden" id="editCourseKey">
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 0.8rem; color: #ccc;">اسم المادة:</label>
-                <input type="text" id="editCourseName" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 0.8rem; color: #ccc;">اسم المدرس:</label>
-                <input type="text" id="editCourseTeacher" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-            </div>
-            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                <div style="flex: 1;">
-                    <label style="font-size: 0.75rem; color: #ccc;">أمريكي:</label>
-                    <input type="number" id="editCoursePriceAm" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-                </div>
-                <div style="flex: 1;">
-                    <label style="font-size: 0.75rem; color: #ccc;">بريطاني:</label>
-                    <input type="number" id="editCoursePriceIG" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-                </div>
-                <div style="flex: 1;">
-                    <label style="font-size: 0.75rem; color: #ccc;">وطني:</label>
-                    <input type="number" id="editCoursePriceNat" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-                </div>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button onclick="saveCourseEdits()" class="btn-gold" style="flex: 1; padding: 8px;">حفظ التعديلات 💾</button>
-                <button onclick="closeEditModal()" style="background: #ff6b6b; color: #fff; border: none; border-radius: 6px; padding: 8px 15px; cursor: pointer;">إلغاء</button>
-            </div>
         </div>
     </div>
 
@@ -191,7 +151,7 @@
     <!-- Dynamic Courses Section -->
     <section id="courses" class="courses-section">
         <div class="container">
-            <h2 class="section-title">المواد الدراسية المتاحة</h2>
+            <h2 class="section-title">المواد الدراسية والمدرسين</h2>
             <div id="dynamicCoursesGrid" class="courses-grid"></div>
         </div>
     </section>
@@ -233,29 +193,74 @@
                         <input type="number" id="lessonsCount" min="1" value="1" oninput="calculateTotal()" required>
                     </div>
 
+                    <!-- اختيار الأيام مع تحديد وقت مختلف لكل يوم -->
                     <div class="form-group">
-                        <label>اختر الأيام المفضلة للحصص أسبوعياً:</label>
-                        <div class="days-checkboxes">
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="السبت"> السبت</label>
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="الأحد"> الأحد</label>
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="الإثنين"> الإثنين</label>
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="الثلاثاء"> الثلاثاء</label>
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="الأربعاء"> الأربعاء</label>
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="الخميس"> الخميس</label>
-                            <label class="day-label"><input type="checkbox" name="preferredDays" value="الجمعة"> الجمعة</label>
+                        <label>اختر الأيام والساعات المفضلة لكل يوم:</label>
+                        <div id="daysTimeContainer" style="margin-top: 8px;">
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="السبت" onchange="toggleDayTime(this)"> السبت</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="الأحد" onchange="toggleDayTime(this)"> الأحد</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="الإثنين" onchange="toggleDayTime(this)"> الإثنين</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="الثلاثاء" onchange="toggleDayTime(this)"> الثلاثاء</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="الأربعاء" onchange="toggleDayTime(this)"> الأربعاء</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="الخميس" onchange="toggleDayTime(this)"> الخميس</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
+                            <div class="day-time-row">
+                                <label style="flex: 1; color: #fff;"><input type="checkbox" name="dayChoice" value="الجمعة" onchange="toggleDayTime(this)"> الجمعة</label>
+                                <select class="day-hour-select" disabled style="flex: 1; padding: 6px; background: #000; color: #fff; border-radius: 4px; border: 1px solid #444;">
+                                    <option value="02:00 م">02:00 عصراً</option>
+                                    <option value="04:00 م">04:00 عصراً</option>
+                                    <option value="06:00 م">06:00 مساؤً</option>
+                                    <option value="08:00 م">08:00 مساءً</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lessonHour">الساعة المفضلة للحصة:</label>
-                        <select id="lessonHour" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; font-size: 1rem;">
-                            <option value="">اختر الساعة...</option>
-                            <option value="02:00 م">02:00 عصراً</option>
-                            <option value="04:00 م">04:00 عصراً</option>
-                            <option value="06:00 م">06:00 مساؤً</option>
-                            <option value="08:00 م">08:00 مساءً</option>
-                            <option value="10:00 م">10:00 مساءً</option>
-                        </select>
                     </div>
 
                     <div style="background: rgba(224, 177, 43, 0.1); border: 1px solid #e0b12b; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
@@ -263,7 +268,7 @@
                         <strong id="totalPriceDisplay" style="color: #e0b12b; font-size: 1.2rem;">0 جنيه</strong>
                     </div>
 
-                    <!-- خانة رفع السكرين شوت (اختياري حتى يتمكن الطالب من الحجز والدفع لاحقاً) -->
+                    <!-- خانة رفع السكرين شوت (اختياري) -->
                     <div class="form-group" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(224,177,43,0.3); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                         <label for="paymentProofFile" style="color: #e0b12b; font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 6px;">📷 ارفع سكرين شوت التحويل (اختياري الآن، أو ارفعه لاحقاً من قسم حصصي):</label>
                         <input type="file" id="paymentProofFile" accept="image/*" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff; font-size: 0.85rem;">
@@ -278,9 +283,9 @@
     <!-- My Lessons Tracker -->
     <section id="myLessons" class="courses-section" style="background: rgba(0,0,0,0.2);">
         <div class="container">
-            <h2 class="section-title">متابعة حصصي</h2>
+            <h2 class="section-title">متابعة حصصي وبيانات المدرسين</h2>
             <div class="glass-card" style="max-width: 650px; margin: 0 auto; padding: 20px;">
-                <p style="color: #ccc; margin-bottom: 12px; text-align: center; font-size: 0.9rem;">اكتب رقم هاتفك لعرض حصصك والدخول المباشر:</p>
+                <p style="color: #ccc; margin-bottom: 12px; text-align: center; font-size: 0.9rem;">اكتب رقم هاتفك لعرض حصصك ومعلومات المدرسين والدخول المباشر:</p>
                 <div style="display: flex; gap: 8px; margin-bottom: 15px;">
                     <input type="tel" id="searchPhone" placeholder="رقم هاتفك..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #091526; color: #fff;">
                     <button onclick="fetchStudentLessons()" class="btn-gold" style="padding: 10px 15px;">بحث</button>
@@ -329,32 +334,19 @@
                     </div>
                 </div>
 
-                <!-- جدول حصص اليوم -->
+                <!-- 1. إضافة مادة وبيانات تفصيلية للمدرس -->
                 <div style="background: rgba(224, 177, 43, 0.08); border: 1px solid #e0b12b; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-                    <h3 style="color: #e0b12b; font-size: 1.1rem; margin-bottom: 10px;">📅 جدول حصص اليوم والساعات:</h3>
-                    <div id="todayScheduleContainer" style="color: #fff; font-size: 0.9rem;"></div>
-                </div>
-
-                <!-- تغيير كلمة المرور -->
-                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(224, 177, 43, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-                    <h3 style="color: #e0b12b; font-size: 1.05rem; margin-bottom: 10px;">🔐 تغيير كلمة مرور الأونر:</h3>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <input type="password" id="newAdminPassword" placeholder="كلمة المرور الجديدة..." style="flex: 1; min-width: 200px; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-                        <button onclick="changeAdminPassword()" class="btn-gold" style="padding: 8px 15px;">حفظ الباسورد الجديد 💾</button>
-                    </div>
-                </div>
-
-                <!-- 1. إضافة مادة -->
-                <div style="background: rgba(224, 177, 43, 0.08); border: 1px solid #e0b12b; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-                    <h3 style="color: #e0b12b; font-size: 1.05rem; margin-bottom: 10px;">➕ إضافة مادة جديدة:</h3>
+                    <h3 style="color: #e0b12b; font-size: 1.05rem; margin-bottom: 10px;">➕ إضافة مادة وبيانات تفصيلية للمدرس:</h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-bottom: 10px;">
                         <input type="text" id="newCourseName" placeholder="اسم المادة" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                         <input type="text" id="newCourseTeacher" placeholder="اسم المدرس" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
+                        <input type="text" id="newTeacherDegree" placeholder="خريج كلية إيه (مثال: تربية جامعة الإسكندرية)" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
+                        <input type="text" id="newTeacherExp" placeholder="خبرة ومؤهلات أخرى (مثال: 10 سنوات خبرة)" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                         <input type="number" id="newCoursePriceAm" placeholder="سعر الأمريكية" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                         <input type="number" id="newCoursePriceIG" placeholder="سعر الـ IG" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                         <input type="number" id="newCoursePriceNat" placeholder="سعر الوطنية" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                     </div>
-                    <button onclick="addNewCourseComplete()" class="btn-gold" style="width: 100%; padding: 8px;">+ إدراج المادة رسمياً بالأكاديمية</button>
+                    <button onclick="addNewCourseComplete()" class="btn-gold" style="width: 100%; padding: 8px;">+ إدراج المادة ومعلومات المدرس بالأكاديمية</button>
                 </div>
 
                 <!-- 2. إدارة المواد -->
@@ -374,7 +366,6 @@
                     </select>
                 </div>
 
-                <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 10px;">💡 مراجعة سكرين التحويل الخاصة بالطالب، تفعيل حسابه، ووضع لينكات الحصص:</p>
                 <!-- Students Container -->
                 <div id="allStudentsContainer" style="text-align: right;"></div>
             </div>
@@ -419,6 +410,18 @@
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
+        // تفعيل وإلغاء تفعيل الساعات لكل يوم حسب اختيار الطالب
+        function toggleDayTime(checkbox) {
+            const selectBox = checkbox.closest('.day-time-row').querySelector('.day-hour-select');
+            if (checkbox.checked) {
+                selectBox.disabled = false;
+                selectBox.style.background = '#091526';
+            } else {
+                selectBox.disabled = true;
+                selectBox.style.background = '#000';
+            }
+        }
+
         async function loadAdminPassword() {
             try {
                 const res = await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/settings/adminPassword.json');
@@ -427,27 +430,10 @@
             } catch(e) {}
         }
 
-        async function changeAdminPassword() {
-            const newPass = document.getElementById('newAdminPassword').value.trim();
-            if (!newPass) { alert('برجاء كتابة كلمة المرور الجديدة!'); return; }
-
-            try {
-                await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/settings/adminPassword.json', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newPass)
-                });
-                adminPassword = newPass;
-                document.getElementById('newAdminPassword').value = '';
-                alert('تم تغيير كلمة مرور الأونر بنجاح!');
-            } catch(e) { alert('خطأ في حفظ كلمة المرور.'); }
-        }
-
         async function loadCourses() {
             try {
                 const res = await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/courses.json');
                 cachedCourses = await res.json() || {};
-                
                 renderCoursesGrid(cachedCourses);
                 renderCourseOptions(cachedCourses);
                 renderAdminCoursesManage(cachedCourses);
@@ -470,21 +456,23 @@
                 <div class="glass-card course-card">
                     <div class="course-icon">📚</div>
                     <h3>${c.name}</h3>
-                    <p style="color: #4ade80; font-size: 0.85rem; margin-bottom: 5px;">المدرس: ${c.teacher || 'غير محدد'}</p>
-                    <div style="color: #e0b12b; font-weight: 800; font-size: 0.85rem; margin: 10px 0;">
+                    <p style="color: #4ade80; font-size: 0.85rem; margin-bottom: 3px;">المدرس: ${c.teacher || 'غير محدد'}</p>
+                    <p style="color: #bbb; font-size: 0.75rem; margin-bottom: 3px;">🎓 ${c.teacherDegree || 'خريج الأكاديمية'}</p>
+                    <p style="color: #aaa; font-size: 0.75rem; margin-bottom: 8px;">⭐ ${c.teacherExp || 'خبرة متميزة'}</p>
+                    <div style="color: #e0b12b; font-weight: 800; font-size: 0.85rem; margin: 5px 0;">
                         أمريكي: ${c.priceAmerican || 200}ج | IGCSE: ${c.priceIGCSE || 180}ج | وطني: ${c.priceNational || 150}ج
                     </div>
                     <button class="btn-select" onclick="selectCourse('${c.name}')">اختر المادة</button>
                 </div>`;
             }
-            grid.innerHTML = html || '<p style="color: #ccc; text-align: center;">لم تقم بإضافة أي مواد بعد من لوحة الأونر.</p>';
+            grid.innerHTML = html || '<p style="color: #ccc; text-align: center;">لم تقم بإضافة أي مواد بعد.</p>';
         }
 
         function renderCourseOptions(coursesObj) {
             const select = document.getElementById('courseSelect');
             let html = '<option value="">اختر المادة...</option>';
             for (let key in coursesObj) {
-                html += `<option value="${key}">${coursesObj[key].name}</option>`;
+                html += `<option value="${key}">${coursesObj[key].name} (مع المدرس: ${coursesObj[key].teacher})</option>`;
             }
             select.innerHTML = html;
         }
@@ -496,11 +484,9 @@
                 let c = coursesObj[key];
                 html += `
                 <div style="display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px; flex-wrap: wrap;">
-                    <strong style="color: #e0b12b; width: 120px;">${c.name}</strong>
-                    <span style="color: #ccc; font-size: 0.8rem;">المدرس: ${c.teacher}</span>
-                    <span style="color: #aaa; font-size: 0.8rem;">(Am: ${c.priceAmerican}ج | IG: ${c.priceIGCSE}ج | Nat: ${c.priceNational}ج)</span>
-                    <div style="margin-right: auto; display: flex; gap: 5px;">
-                        <button onclick="openEditCourseModal('${key}')" style="background: #e0b12b; color: #000; border: none; border-radius: 4px; padding: 3px 8px; font-size: 0.75rem; cursor: pointer; font-weight: bold;">تعديل ✏️</button>
+                    <strong style="color: #e0b12b; width: 100px;">${c.name}</strong>
+                    <span style="color: #ccc; font-size: 0.8rem;">👨‍🏫 ${c.teacher} (${c.teacherDegree || ''})</span>
+                    <div style="margin-right: auto;">
                         <button onclick="deleteCourse('${key}')" style="background: #ff6b6b; color: #fff; border: none; border-radius: 4px; padding: 3px 8px; font-size: 0.75rem; cursor: pointer;">حذف</button>
                     </div>
                 </div>`;
@@ -508,55 +494,18 @@
             container.innerHTML = html || '<p style="color: #aaa; font-size: 0.8rem;">لا توجد مواد حالياً.</p>';
         }
 
-        function openEditCourseModal(key) {
-            let c = cachedCourses[key];
-            if (c) {
-                document.getElementById('editCourseKey').value = key;
-                document.getElementById('editCourseName').value = c.name;
-                document.getElementById('editCourseTeacher').value = c.teacher;
-                document.getElementById('editCoursePriceAm').value = c.priceAmerican || 200;
-                document.getElementById('editCoursePriceIG').value = c.priceIGCSE || 180;
-                document.getElementById('editCoursePriceNat').value = c.priceNational || 150;
-                document.getElementById('editCourseModal').style.display = 'flex';
-            }
-        }
-
-        function closeEditModal() {
-            document.getElementById('editCourseModal').style.display = 'none';
-        }
-
-        async function saveCourseEdits() {
-            const key = document.getElementById('editCourseKey').value;
-            const updatedData = {
-                name: document.getElementById('editCourseName').value.trim(),
-                teacher: document.getElementById('editCourseTeacher').value.trim(),
-                priceAmerican: parseInt(document.getElementById('editCoursePriceAm').value) || 200,
-                priceIGCSE: parseInt(document.getElementById('editCoursePriceIG').value) || 180,
-                priceNational: parseInt(document.getElementById('editCoursePriceNat').value) || 150
-            };
-
-            try {
-                await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/courses/${key}.json`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedData)
-                });
-                alert('تم تحديث بيانات المادة بنجاح!');
-                closeEditModal();
-                loadCourses();
-            } catch (e) { alert('خطأ في حفظ التعديلات.'); }
-        }
-
         async function addNewCourseComplete() {
             const name = document.getElementById('newCourseName').value.trim();
             const teacher = document.getElementById('newCourseTeacher').value.trim();
+            const teacherDegree = document.getElementById('newTeacherDegree').value.trim();
+            const teacherExp = document.getElementById('newTeacherExp').value.trim();
             const priceAm = parseInt(document.getElementById('newCoursePriceAm').value) || 200;
             const priceIG = parseInt(document.getElementById('newCoursePriceIG').value) || 180;
             const priceNat = parseInt(document.getElementById('newCoursePriceNat').value) || 150;
 
             if (!name || !teacher) { alert('برجاء كتابة اسم المادة واسم المدرس!'); return; }
 
-            const courseData = { name, teacher, priceAmerican: priceAm, priceIGCSE: priceIG, priceNational: priceNat };
+            const courseData = { name, teacher, teacherDegree, teacherExp, priceAmerican: priceAm, priceIGCSE: priceIG, priceNational: priceNat };
 
             try {
                 await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/courses.json', {
@@ -564,18 +513,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(courseData)
                 });
-                alert(`تمت إضافة مادة ${name} بنجاح!`);
+                alert(`تمت إضافة مادة ${name} وبيانات المدرس بنجاح!`);
                 document.getElementById('newCourseName').value = '';
                 document.getElementById('newCourseTeacher').value = '';
-                document.getElementById('newCoursePriceAm').value = '';
-                document.getElementById('newCoursePriceIG').value = '';
-                document.getElementById('newCoursePriceNat').value = '';
+                document.getElementById('newTeacherDegree').value = '';
+                document.getElementById('newTeacherExp').value = '';
                 loadCourses();
             } catch (e) { alert('خطأ في الإضافة.'); }
         }
 
         async function deleteCourse(key) {
-            if(!confirm('هل أنت تأكد من حذف هذه المادة؟')) return;
+            if(!confirm('هل أنت متأكد من حذف هذه المادة؟')) return;
             try {
                 await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/courses/${key}.json`, { method: 'DELETE' });
                 loadCourses();
@@ -628,17 +576,23 @@
             const fullName = document.getElementById('fullName').value;
             const phone = document.getElementById('phone').value;
             const courseKey = document.getElementById('courseSelect').value;
-            const courseObj = cachedCourses[courseKey];
-            const courseName = courseObj ? courseObj.name : "عامة";
-            const teacherName = courseObj ? courseObj.teacher : "غير محدد";
+            const courseObj = cachedCourses[courseKey] || {};
+            const courseName = courseObj.name || "عامة";
+            const teacherName = courseObj.teacher || "غير محدد";
+            const teacherDegree = courseObj.teacherDegree || "غير محدد";
+            const teacherExp = courseObj.teacherExp || "غير محدد";
             const educationSystem = document.getElementById('educationSystem').value;
             const lessonsCount = parseInt(document.getElementById('lessonsCount').value);
             const totalPrice = document.getElementById('totalPriceDisplay').innerText;
-            const lessonHour = document.getElementById('lessonHour').value;
 
-            let selectedDays = [];
-            document.querySelectorAll('input[name="preferredDays"]:checked').forEach(cb => {
-                selectedDays.push(cb.value);
+            // جمع الأيام والساعات المحددة لكل يوم
+            let scheduleList = [];
+            document.querySelectorAll('.day-time-row').forEach(row => {
+                const cb = row.querySelector('input[name="dayChoice"]');
+                const sel = row.querySelector('.day-hour-select');
+                if (cb.checked) {
+                    scheduleList.push(`${cb.value} (${sel.value})`);
+                }
             });
 
             let lessonsArray = [];
@@ -647,6 +601,8 @@
                     id: i, 
                     name: `الحصة رقم ${i}`, 
                     teacher: teacherName,
+                    teacherDegree: teacherDegree,
+                    teacherExp: teacherExp,
                     link: "", 
                     completed: false,
                     enteredAt: null
@@ -654,13 +610,12 @@
             }
 
             const bookingData = { 
-                fullName, phone, course: courseName, educationSystem, 
+                fullName, phone, course: courseName, teacher: teacherName, teacherDegree, teacherExp, educationSystem, 
                 lessonsCount, totalPrice, lessons: lessonsArray, 
-                preferredDays: selectedDays.join(', ') || 'غير محدد',
-                lessonHour: lessonHour || 'غير محددة',
+                preferredSchedule: scheduleList.join(', ') || 'غير محدد',
                 isPaidConfirmed: false, 
                 paymentProof: base64Image,
-                isBlocked: false, timestamp: new Date().toISOString() 
+                timestamp: new Date().toISOString() 
             };
 
             try {
@@ -682,7 +637,7 @@
             if (!record.lessons || !Array.isArray(record.lessons)) {
                 record.lessons = [];
                 for (let i = 1; i <= count; i++) {
-                    record.lessons.push({ id: i, name: `الحصة رقم ${i}`, teacher: "غير محدد", link: "", completed: false, enteredAt: null });
+                    record.lessons.push({ id: i, name: `الحصة رقم ${i}`, teacher: record.teacher || "غير محدد", teacherDegree: record.teacherDegree || "", teacherExp: record.teacherExp || "", link: "", completed: false, enteredAt: null });
                 }
             }
             return { count, lessons: record.lessons };
@@ -706,52 +661,33 @@
                 if (!studentRecord) { container.innerHTML = '<p style="color: #ff6b6b; text-align: center;">لم يتم العثور على طالب بهذا الرقم.</p>'; return; }
 
                 if (!studentRecord.isPaidConfirmed) {
-                    let currentProof = studentRecord.paymentProof;
-                    let proofHtml = (currentProof && currentProof.startsWith('data:image')) 
-                        ? `<p style="color: #4ade80; font-size: 0.85rem; margin-bottom: 8px;">✓ تم رفع السكرين مسبقاً، في انتظار تفعيل الإدارة.</p>` 
-                        : `<p style="color: #ff6b6b; font-size: 0.85rem; margin-bottom: 8px;">⏳ لم تقم برفع سكرين التحويل بعد!</p>`;
-
                     container.innerHTML = `
                         <div style="background: rgba(224,177,43,0.1); border: 1px solid #e0b12b; padding: 15px; border-radius: 8px; text-align: right;">
                             <h3 style="color: #e0b12b; margin-bottom: 8px; text-align: center;">⏳ إرسال إثبات الدفع للمنصة</h3>
                             <p style="color: #fff; font-size: 0.9rem; margin-bottom: 12px; text-align: center;">أهلاً بك ${studentRecord.fullName}. برجاء رفع سكرين شوت التحويل بعد إتمام الدفع عبر إنستاباي:</p>
-                            
-                            ${proofHtml}
-
                             <div style="margin-bottom: 15px;">
-                                <label style="font-size: 0.8rem; color: #ccc;">📷 اختر سكرين شوت التحويل من جهازك:</label>
                                 <input type="file" id="uploadProofLater_${foundKey}" accept="image/*" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff; font-size: 0.85rem;">
                             </div>
-                            
                             <button onclick="submitLaterPaymentProof('${foundKey}')" class="btn-gold btn-full">رفع وإرسال إلى الإدارة 🚀</button>
                         </div>`;
                     return;
                 }
 
                 const info = ensureLessonsArray(studentRecord);
-                let totalLessons = info.count;
-                let completedCount = info.lessons.filter(l => l.completed).length;
-
                 let html = `<h3 style="color: #fff; text-align: center; font-size: 1.1rem;">أهلاً ${studentRecord.fullName || 'الطالب'} 👋</h3>`;
-                html += `<p style="color: #e0b12b; text-align: center; font-size: 0.85rem; margin-bottom: 10px;">المواعيد: ${studentRecord.preferredDays || 'غير محددة'} (${studentRecord.lessonHour || ''})</p>`;
-                html += `
-                <div class="scoreboard-container" style="margin: 10px 0;">
-                    <div class="score-box"><div class="score-number">${totalLessons}</div><div class="score-label">الكل</div></div>
-                    <div class="score-box"><div class="score-number" style="color: #4ade80;">${completedCount}</div><div class="score-label">تم</div></div>
-                    <div class="score-box"><div class="score-number" style="color: #ff6b6b;">${totalLessons - completedCount}</div><div class="score-label">المتبقي</div></div>
-                </div>`;
+                html += `<p style="color: #e0b12b; text-align: center; font-size: 0.85rem; margin-bottom: 15px;">مواعيدك: ${studentRecord.preferredSchedule || 'غير محددة'}</p>`;
 
                 info.lessons.forEach((lesson, index) => {
                     let isDone = lesson.completed;
                     let hasLink = lesson.link && lesson.link.trim() !== "";
                     html += `
-                    <div class="lesson-card ${isDone ? 'completed' : ''}">
-                        <div>
-                            <strong style="color: #fff; font-size: 0.9rem;">${lesson.name}</strong>
-                            <span style="display: block; font-size: 0.75rem; color: #e0b12b;">👨‍🏫 المدرس: ${lesson.teacher || 'غير محدد'}</span>
+                    <div class="lesson-card ${isDone ? 'completed' : ''}" style="display:flex; flex-direction:column; gap:5px; background:rgba(0,0,0,0.4); padding:12px; border-radius:8px; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color: #fff; font-size: 0.95rem;">${lesson.name} (${studentRecord.course})</strong>
+                            <div>${!isDone ? (hasLink ? `<button onclick="launchLessonDirect('${foundKey}', ${index}, '${lesson.link}')" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem;">دخول الحصة 🚀</button>` : '<span style="color: #e0b12b; font-size: 0.75rem;">في انتظار اللينك</span>') : '<span style="color: #4ade80; font-size: 0.75rem;">تمت ✓</span>'}</div>
                         </div>
-                        <div>
-                            ${!isDone ? (hasLink ? `<button onclick="launchLessonDirect('${foundKey}', ${index}, '${lesson.link}')" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem;">دخول المباشر 🚀</button>` : '<span style="color: #e0b12b; font-size: 0.75rem;">في انتظار اللينك من الإدارة</span>') : '<span style="color: #4ade80; font-size: 0.75rem;">تمت ✓</span>'}
+                        <div style="font-size: 0.8rem; color: #bbb; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px;">
+                            👨‍🏫 <strong>المدرس:</strong> ${lesson.teacher || studentRecord.teacher || 'غير محدد'} | 🎓 <strong>التخرج:</strong> ${lesson.teacherDegree || studentRecord.teacherDegree || 'غير متوفر'} | ⭐ <strong>الخبرة:</strong> ${lesson.teacherExp || studentRecord.teacherExp || 'غير متوفر'}
                         </div>
                     </div>`;
                 });
@@ -802,7 +738,6 @@
                     });
 
                     window.open(meetingLink, '_blank');
-                    
                     activeLessonRatingInfo = { key: firebaseKey, index: lessonIndex, teacher: info.lessons[lessonIndex].teacher, studentName: student.fullName, startTime: startTime };
                     document.getElementById('ratingModal').style.display = 'flex';
                     fetchStudentLessons();
@@ -826,19 +761,6 @@
                 let durationMinutes = Math.round((endTime - activeLessonRatingInfo.startTime) / 60000);
                 if(durationMinutes < 1) durationMinutes = 1;
 
-                try {
-                    const res = await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${activeLessonRatingInfo.key}.json`);
-                    let student = await res.json();
-                    if(student && student.lessons) {
-                        student.lessons[activeLessonRatingInfo.index].sessionDuration = durationMinutes;
-                        await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${activeLessonRatingInfo.key}.json`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(student)
-                        });
-                    }
-                } catch(e) {}
-
                 const ratingData = {
                     stars: selectedStars,
                     comment: comment,
@@ -853,14 +775,12 @@
                     body: JSON.stringify(ratingData)
                 }).catch(e => {});
 
-                alert(`شكراً لك! تم احتساب مدة الحصة (${durationMinutes} دقيقة) وإرسال تقييمك للمدرس بنجاح.`);
+                alert(`شكراً لك! تم إرسال تقييمك للمدرس بنجاح.`);
                 document.getElementById('ratingModal').style.display = 'none';
-                loadRatings();
             }
         }
 
         async function checkAdminPassword() {
-            await loadAdminPassword();
             const enteredPass = document.getElementById('adminPasswordInput').value;
             if (enteredPass === adminPassword) {
                 document.getElementById('adminLoginBox').style.display = 'none';
@@ -882,67 +802,10 @@
         async function fetchAllAdminStudents() {
             const container = document.getElementById('allStudentsContainer');
             try {
-                const [resBookings, resRatings] = await Promise.all([
-                    fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/bookings.json'),
-                    fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/ratings.json')
-                ]);
+                const resBookings = await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/bookings.json');
                 cachedBookings = await resBookings.json() || {};
-                cachedRatings = await resRatings.json() || {};
-                
-                calculateDashboardStats(cachedBookings);
-                renderTodaySchedule(cachedBookings);
                 renderAdminStudents(cachedBookings);
             } catch (e) {}
-        }
-
-        function calculateDashboardStats(data) {
-            let totalStudents = Object.keys(data).length;
-            let completedLessons = 0;
-            let totalRev = 0;
-
-            for (let k in data) {
-                let s = data[k];
-                if (s.lessons && Array.isArray(s.lessons)) {
-                    completedLessons += s.lessons.filter(l => l.completed).length;
-                }
-                if (s.totalPrice && s.isPaidConfirmed) {
-                    totalRev += parseInt(s.totalPrice) || 0;
-                }
-            }
-
-            document.getElementById('statTotalStudents').innerText = totalStudents;
-            document.getElementById('statCompletedLessons').innerText = completedLessons;
-            document.getElementById('statTotalRevenue').innerText = totalRev + " ج";
-        }
-
-        function renderTodaySchedule(data) {
-            const todayContainer = document.getElementById('todayScheduleContainer');
-            const daysNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-            const currentDayName = daysNames[new Date().getDay()];
-
-            let todayHTML = `<p style="color: #e0b12b; margin-bottom: 8px; font-weight: bold;">📅 اليوم: ${currentDayName}</p>`;
-            let foundToday = false;
-
-            for (let key in data) {
-                let s = data[key];
-                if (s.isPaidConfirmed && s.preferredDays && s.preferredDays.includes(currentDayName)) {
-                    foundToday = true;
-                    let firstLink = s.lessons && s.lessons[0] ? s.lessons[0].link : '';
-                    todayHTML += `
-                    <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border-right: 3px solid #e0b12b;">
-                        <div>
-                            <strong>${s.course}</strong> (${s.lessonHour || ''}) - طالب: ${s.fullName} (${s.phone})
-                        </div>
-                        ${firstLink ? `<a href="${firstLink}" target="_blank" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem; text-decoration: none;">دخول حصة اليوم 🚀</a>` : '<span style="color:#ff6b6b; font-size:0.75rem;">لم يضاف له لينك بعد</span>'}
-                    </div>`;
-                }
-            }
-
-            if (!foundToday) {
-                todayHTML += `<p style="color: #aaa; font-size: 0.85rem;">لا توجد حصص مؤكدة ومجدولة لهذا اليوم (${currentDayName}).</p>`;
-            }
-
-            todayContainer.innerHTML = todayHTML;
         }
 
         function filterAdminStudents() {
@@ -957,7 +820,6 @@
             let html = '';
             for (let key in data) {
                 let student = data[key];
-                
                 let matchesSearch = !searchVal || (student.fullName && student.fullName.toLowerCase().includes(searchVal)) || (student.phone && student.phone.includes(searchVal));
                 let matchesSys = (sysVal === 'ALL') || (student.educationSystem === sysVal);
 
@@ -968,18 +830,16 @@
 
                 let proofDisplay = 'بدون سكرين';
                 if (student.paymentProof && student.paymentProof.startsWith('data:image')) {
-                    proofDisplay = `<a href="${student.paymentProof}" target="_blank" style="color: #e0b12b; text-decoration: underline; font-weight: bold;">📷 اضغط هنا لمعاينة سكرين التحويل</a>`;
+                    proofDisplay = `<a href="${student.paymentProof}" target="_blank" style="color: #e0b12b; text-decoration: underline; font-weight: bold;">📷 معاينة سكرين التحويل</a>`;
                 }
 
                 html += `
                 <div style="background: ${isConfirmed ? 'rgba(255, 255, 255, 0.03)' : 'rgba(224, 177, 43, 0.08)'}; border: 1px solid ${isConfirmed ? 'rgba(224, 177, 43, 0.3)' : '#e0b12b'}; border-radius: 12px; padding: 15px; margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
                         <div>
-                            <h3 style="color: #e0b12b; font-size: 1.05rem; margin: 0 0 4px 0;">👤 ${student.fullName || 'بدون اسم'} ${isConfirmed ? '✅ (مفعل)' : '⏳ (في انتظار السكرين/المراجعة)'}</h3>
-                            <span style="color: #aaa; font-size: 0.8rem;">📞 ${student.phone} | المادة: ${student.course} (${student.educationSystem}) | الساعة: ${student.lessonHour} | الأيام: ${student.preferredDays} | المبلغ: ${student.totalPrice}</span>
-                            <div style="margin-top: 5px; font-size: 0.85rem; color: #4ade80;">
-                                ${proofDisplay}
-                            </div>
+                            <h3 style="color: #e0b12b; font-size: 1.05rem; margin: 0 0 4px 0;">👤 ${student.fullName || 'بدون اسم'} ${isConfirmed ? '✅ (مفعل)' : '⏳ (قيد المراجعة)'}</h3>
+                            <span style="color: #aaa; font-size: 0.8rem;">📞 ${student.phone} | المادة: ${student.course} (${student.educationSystem}) | المواعيد: ${student.preferredSchedule} | المبلغ: ${student.totalPrice}</span>
+                            <div style="margin-top: 5px; font-size: 0.85rem; color: #4ade80;">${proofDisplay}</div>
                         </div>
                         <div>
                             <button onclick="toggleConfirmPayment('${key}', ${!isConfirmed})" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem; background: ${isConfirmed ? '#ff6b6b' : '#4ade80'}; color: #000; font-weight: bold;">
@@ -987,7 +847,6 @@
                             </button>
                         </div>
                     </div>
-                    
                     <h4 style="color: #fff; font-size: 0.85rem; margin-bottom: 6px;">تحديد لينك زوم/ميت لكل حصة للطالب:</h4>`;
 
                 info.lessons.forEach((lesson, idx) => {
@@ -998,52 +857,50 @@
                         <button onclick="saveStudentLessonLink('${key}', ${idx})" style="background: #e0b12b; color: #000; border: none; border-radius: 4px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; font-weight: bold;">حفظ الرابط</button>
                     </div>`;
                 });
-
                 html += `</div>`;
             }
-
             container.innerHTML = html || '<p style="color: #ff6b6b; text-align: center;">لا توجد طلبات حجوزات مطابقة للبحث.</p>';
         }
 
-        async function toggleConfirmPayment(firebaseKey, status) {
+        async function toggleConfirmPayment(firebaseGroupKey, status) {
             try {
-                await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}/isPaidConfirmed.json`, {
+                await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseGroupKey}/isPaidConfirmed.json`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(status)
                 });
-                alert(status ? 'تم تأكيد الدفع وتفعيل الطالب بنجاح!' : 'تم إلغاء التفعيل.');
+                alert(status ? 'تم تفعيل الطالب بنجاح!' : 'تم إلغاء التفعيل.');
                 fetchAllAdminStudents();
             } catch (e) { alert('خطأ في التحديث.'); }
         }
 
-        async function saveStudentLessonLink(firebaseKey, lessonIndex) {
-            const linkVal = document.getElementById(`link_${firebaseKey}_${lessonIndex}`).value.trim();
+        async function saveStudentLessonLink(firebaseGroupKey, lessonIndex) {
+            const linkVal = document.getElementById(`link_${firebaseGroupKey}_${lessonIndex}`).value.trim();
             try {
-                const res = await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`);
+                const res = await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseGroupKey}.json`);
                 let student = await res.json();
                 if (student) {
                     const info = ensureLessonsArray(student);
                     info.lessons[lessonIndex].link = linkVal;
                     student.lessons = info.lessons;
 
-                    await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`, {
+                    await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseGroupKey}.json`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(student)
                     });
-                    alert('تم حفظ رابط الحصة بنجاح للطالب!');
+                    alert('تم حفظ رابط الحصة بنجاح!');
                     fetchAllAdminStudents();
                 }
             } catch (e) { alert('خطأ في حفظ الرابط.'); }
         }
 
         function exportToCSV() {
-            let csvContent = "\uFEFFالاسم,الهاتف,المادة,النظام,الإجمالي,الحالة,الأيام,الساعة\n";
+            let csvContent = "\uFEFFالاسم,الهاتف,المادة,النظام,الإجمالي,الحالة,المواعيد\n";
             for (let k in cachedBookings) {
                 let s = cachedBookings[k];
                 let status = s.isPaidConfirmed ? "مفعل" : "قيد المراجعة";
-                csvContent += `"${s.fullName || ''}","${s.phone || ''}","${s.course || ''}","${s.educationSystem || ''}","${s.totalPrice || ''}","${status}","${s.preferredDays || ''}","${s.lessonHour || ''}"\n`;
+                csvContent += `"${s.fullName || ''}","${s.phone || ''}","${s.course || ''}","${s.educationSystem || ''}","${s.totalPrice || ''}","${status}","${s.preferredSchedule || ''}"\n`;
             }
             let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             let url = URL.createObjectURL(blob);
