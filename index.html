@@ -93,17 +93,6 @@
         </div>
     </div>
 
-    <!-- Student Details Profile Modal -->
-    <div id="studentProfileModal" class="modal-overlay">
-        <div class="modal-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="color: #e0b12b; margin: 0;">👤 بروفايل وسجل الطالب</h3>
-                <button onclick="closeStudentModal()" style="background: #ff6b6b; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer;">إغلاق ✕</button>
-            </div>
-            <div id="studentProfileContent"></div>
-        </div>
-    </div>
-
     <!-- Edit Course Modal -->
     <div id="editCourseModal" class="modal-overlay">
         <div class="modal-box">
@@ -130,10 +119,6 @@
                     <label style="font-size: 0.75rem; color: #ccc;">وطني:</label>
                     <input type="number" id="editCoursePriceNat" style="width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                 </div>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <label style="font-size: 0.8rem; color: #ccc;">رابط زوم/ميت:</label>
-                <input type="text" id="editCourseLink" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
             </div>
             <div style="display: flex; gap: 8px;">
                 <button onclick="saveCourseEdits()" class="btn-gold" style="flex: 1; padding: 8px;">حفظ التعديلات 💾</button>
@@ -261,12 +246,30 @@
                         </div>
                     </div>
 
-                    <div style="background: rgba(224, 177, 43, 0.1); border: 1px solid #e0b12b; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                    <div class="form-group">
+                        <label for="lessonHour">الساعة المفضلة للحصة:</label>
+                        <select id="lessonHour" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; font-size: 1rem;">
+                            <option value="">اختر الساعة...</option>
+                            <option value="02:00 م">02:00 عصراً</option>
+                            <option value="04:00 م">04:00 عصراً</option>
+                            <option value="06:00 م">06:00 مساؤً</option>
+                            <option value="08:00 م">08:00 مساءً</option>
+                            <option value="10:00 م">10:00 مساءً</option>
+                        </select>
+                    </div>
+
+                    <div style="background: rgba(224, 177, 43, 0.1); border: 1px solid #e0b12b; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
                         <span style="font-size: 0.95rem;">إجمالي المبلغ: </span>
                         <strong id="totalPriceDisplay" style="color: #e0b12b; font-size: 1.2rem;">0 جنيه</strong>
                     </div>
 
-                    <button type="submit" class="btn-gold btn-full">تأكيد الحجز والدفع عبر إنستاباي</button>
+                    <!-- خانة رفع السكرين شوت (اختياري حتى يتمكن الطالب من الحجز والدفع لاحقاً) -->
+                    <div class="form-group" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(224,177,43,0.3); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                        <label for="paymentProofFile" style="color: #e0b12b; font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 6px;">📷 ارفع سكرين شوت التحويل (اختياري الآن، أو ارفعه لاحقاً من قسم حصصي):</label>
+                        <input type="file" id="paymentProofFile" accept="image/*" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff; font-size: 0.85rem;">
+                    </div>
+
+                    <button type="submit" class="btn-gold btn-full">إرسال إلى المنصة والدفع عبر إنستاباي 🚀</button>
                 </form>
             </div>
         </div>
@@ -326,7 +329,13 @@
                     </div>
                 </div>
 
-                <!-- قسم تغيير كلمة المرور -->
+                <!-- جدول حصص اليوم -->
+                <div style="background: rgba(224, 177, 43, 0.08); border: 1px solid #e0b12b; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+                    <h3 style="color: #e0b12b; font-size: 1.1rem; margin-bottom: 10px;">📅 جدول حصص اليوم والساعات:</h3>
+                    <div id="todayScheduleContainer" style="color: #fff; font-size: 0.9rem;"></div>
+                </div>
+
+                <!-- تغيير كلمة المرور -->
                 <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(224, 177, 43, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
                     <h3 style="color: #e0b12b; font-size: 1.05rem; margin-bottom: 10px;">🔐 تغيير كلمة مرور الأونر:</h3>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -344,7 +353,6 @@
                         <input type="number" id="newCoursePriceAm" placeholder="سعر الأمريكية" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                         <input type="number" id="newCoursePriceIG" placeholder="سعر الـ IG" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                         <input type="number" id="newCoursePriceNat" placeholder="سعر الوطنية" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
-                        <input type="text" id="newCourseLink" placeholder="رابط زوم/ميت" style="padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff;">
                     </div>
                     <button onclick="addNewCourseComplete()" class="btn-gold" style="width: 100%; padding: 8px;">+ إدراج المادة رسمياً بالأكاديمية</button>
                 </div>
@@ -366,7 +374,7 @@
                     </select>
                 </div>
 
-                <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 10px;">💡 اضغط على اسم أي طالب لعرض ملفه التفصيلي وسجل حصاره وتقييماته:</p>
+                <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 10px;">💡 مراجعة سكرين التحويل الخاصة بالطالب، تفعيل حسابه، ووضع لينكات الحصص:</p>
                 <!-- Students Container -->
                 <div id="allStudentsContainer" style="text-align: right;"></div>
             </div>
@@ -393,7 +401,7 @@
 
     <!-- Scripts -->
     <script>
-        let adminPassword = "lolo0011"; // الباسورد الافتراضي
+        let adminPassword = "lolo0011"; 
         let cachedBookings = {};
         let cachedCourses = {};
         let cachedRatings = {};
@@ -405,6 +413,11 @@
             loadCourses();
             loadRatings();
         };
+
+        function toggleWaMenu() {
+            const menu = document.getElementById('waMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
 
         async function loadAdminPassword() {
             try {
@@ -504,7 +517,6 @@
                 document.getElementById('editCoursePriceAm').value = c.priceAmerican || 200;
                 document.getElementById('editCoursePriceIG').value = c.priceIGCSE || 180;
                 document.getElementById('editCoursePriceNat').value = c.priceNational || 150;
-                document.getElementById('editCourseLink').value = c.meetingLink || "https://meet.google.com/";
                 document.getElementById('editCourseModal').style.display = 'flex';
             }
         }
@@ -520,8 +532,7 @@
                 teacher: document.getElementById('editCourseTeacher').value.trim(),
                 priceAmerican: parseInt(document.getElementById('editCoursePriceAm').value) || 200,
                 priceIGCSE: parseInt(document.getElementById('editCoursePriceIG').value) || 180,
-                priceNational: parseInt(document.getElementById('editCoursePriceNat').value) || 150,
-                meetingLink: document.getElementById('editCourseLink').value.trim()
+                priceNational: parseInt(document.getElementById('editCoursePriceNat').value) || 150
             };
 
             try {
@@ -542,11 +553,10 @@
             const priceAm = parseInt(document.getElementById('newCoursePriceAm').value) || 200;
             const priceIG = parseInt(document.getElementById('newCoursePriceIG').value) || 180;
             const priceNat = parseInt(document.getElementById('newCoursePriceNat').value) || 150;
-            const link = document.getElementById('newCourseLink').value.trim() || "https://meet.google.com/";
 
             if (!name || !teacher) { alert('برجاء كتابة اسم المادة واسم المدرس!'); return; }
 
-            const courseData = { name, teacher, priceAmerican: priceAm, priceIGCSE: priceIG, priceNational: priceNat, meetingLink: link };
+            const courseData = { name, teacher, priceAmerican: priceAm, priceIGCSE: priceIG, priceNational: priceNat };
 
             try {
                 await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/courses.json', {
@@ -560,7 +570,6 @@
                 document.getElementById('newCoursePriceAm').value = '';
                 document.getElementById('newCoursePriceIG').value = '';
                 document.getElementById('newCoursePriceNat').value = '';
-                document.getElementById('newCourseLink').value = '';
                 loadCourses();
             } catch (e) { alert('خطأ في الإضافة.'); }
         }
@@ -600,19 +609,32 @@
             document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
         }
 
-        async function sendToFirebaseAndPay(event) {
+        function sendToFirebaseAndPay(event) {
             event.preventDefault();
 
+            const fileInput = document.getElementById('paymentProofFile');
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processBookingWithImage(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                processBookingWithImage("بدون سكرين");
+            }
+        }
+
+        async function processBookingWithImage(base64Image) {
             const fullName = document.getElementById('fullName').value;
             const phone = document.getElementById('phone').value;
             const courseKey = document.getElementById('courseSelect').value;
             const courseObj = cachedCourses[courseKey];
             const courseName = courseObj ? courseObj.name : "عامة";
             const teacherName = courseObj ? courseObj.teacher : "غير محدد";
-            const meetingLink = courseObj ? courseObj.meetingLink : "https://meet.google.com/";
             const educationSystem = document.getElementById('educationSystem').value;
             const lessonsCount = parseInt(document.getElementById('lessonsCount').value);
             const totalPrice = document.getElementById('totalPriceDisplay').innerText;
+            const lessonHour = document.getElementById('lessonHour').value;
 
             let selectedDays = [];
             document.querySelectorAll('input[name="preferredDays"]:checked').forEach(cb => {
@@ -625,7 +647,7 @@
                     id: i, 
                     name: `الحصة رقم ${i}`, 
                     teacher: teacherName,
-                    link: meetingLink,
+                    link: "", 
                     completed: false,
                     enteredAt: null
                 });
@@ -635,16 +657,24 @@
                 fullName, phone, course: courseName, educationSystem, 
                 lessonsCount, totalPrice, lessons: lessonsArray, 
                 preferredDays: selectedDays.join(', ') || 'غير محدد',
+                lessonHour: lessonHour || 'غير محددة',
+                isPaidConfirmed: false, 
+                paymentProof: base64Image,
                 isBlocked: false, timestamp: new Date().toISOString() 
             };
 
-            fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/bookings.json', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bookingData)
-            }).catch(e => {});
-
-            window.location.assign('https://ipn.eg/S/eyad1aa/instapay/10RhHc');
+            try {
+                await fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/bookings.json', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+                
+                alert('✨ تم تسجيل حجزك بنجاح! سيتم تحويلك الآن لإنستاباي لإتمام الدفع، وبعد الدفع يمكنك رفع السكرين من قسم "متابعة حصصي".');
+                window.location.assign('https://ipn.eg/S/eyad1aa/instapay/10RhHc');
+            } catch(e) {
+                alert('حدث خطأ أثناء الإرسال، حاول مرة أخرى.');
+            }
         }
 
         function ensureLessonsArray(record) {
@@ -652,7 +682,7 @@
             if (!record.lessons || !Array.isArray(record.lessons)) {
                 record.lessons = [];
                 for (let i = 1; i <= count; i++) {
-                    record.lessons.push({ id: i, name: `الحصة رقم ${i}`, teacher: "غير محدد", link: "https://meet.google.com/", completed: false, enteredAt: null });
+                    record.lessons.push({ id: i, name: `الحصة رقم ${i}`, teacher: "غير محدد", link: "", completed: false, enteredAt: null });
                 }
             }
             return { count, lessons: record.lessons };
@@ -673,14 +703,37 @@
                 for (let key in data) {
                     if (data[key].phone === phone) { foundKey = key; studentRecord = data[key]; break; }
                 }
-                if (!studentRecord) { container.innerHTML = '<p style="color: #ff6b6b; text-align: center;">لم يتم العثور على طالب.</p>'; return; }
+                if (!studentRecord) { container.innerHTML = '<p style="color: #ff6b6b; text-align: center;">لم يتم العثور على طالب بهذا الرقم.</p>'; return; }
+
+                if (!studentRecord.isPaidConfirmed) {
+                    let currentProof = studentRecord.paymentProof;
+                    let proofHtml = (currentProof && currentProof.startsWith('data:image')) 
+                        ? `<p style="color: #4ade80; font-size: 0.85rem; margin-bottom: 8px;">✓ تم رفع السكرين مسبقاً، في انتظار تفعيل الإدارة.</p>` 
+                        : `<p style="color: #ff6b6b; font-size: 0.85rem; margin-bottom: 8px;">⏳ لم تقم برفع سكرين التحويل بعد!</p>`;
+
+                    container.innerHTML = `
+                        <div style="background: rgba(224,177,43,0.1); border: 1px solid #e0b12b; padding: 15px; border-radius: 8px; text-align: right;">
+                            <h3 style="color: #e0b12b; margin-bottom: 8px; text-align: center;">⏳ إرسال إثبات الدفع للمنصة</h3>
+                            <p style="color: #fff; font-size: 0.9rem; margin-bottom: 12px; text-align: center;">أهلاً بك ${studentRecord.fullName}. برجاء رفع سكرين شوت التحويل بعد إتمام الدفع عبر إنستاباي:</p>
+                            
+                            ${proofHtml}
+
+                            <div style="margin-bottom: 15px;">
+                                <label style="font-size: 0.8rem; color: #ccc;">📷 اختر سكرين شوت التحويل من جهازك:</label>
+                                <input type="file" id="uploadProofLater_${foundKey}" accept="image/*" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #000; color: #fff; font-size: 0.85rem;">
+                            </div>
+                            
+                            <button onclick="submitLaterPaymentProof('${foundKey}')" class="btn-gold btn-full">رفع وإرسال إلى الإدارة 🚀</button>
+                        </div>`;
+                    return;
+                }
 
                 const info = ensureLessonsArray(studentRecord);
                 let totalLessons = info.count;
                 let completedCount = info.lessons.filter(l => l.completed).length;
 
                 let html = `<h3 style="color: #fff; text-align: center; font-size: 1.1rem;">أهلاً ${studentRecord.fullName || 'الطالب'} 👋</h3>`;
-                html += `<p style="color: #e0b12b; text-align: center; font-size: 0.85rem; margin-bottom: 10px;">الأيام المختارة أسبوعياً: ${studentRecord.preferredDays || 'غير محددة'}</p>`;
+                html += `<p style="color: #e0b12b; text-align: center; font-size: 0.85rem; margin-bottom: 10px;">المواعيد: ${studentRecord.preferredDays || 'غير محددة'} (${studentRecord.lessonHour || ''})</p>`;
                 html += `
                 <div class="scoreboard-container" style="margin: 10px 0;">
                     <div class="score-box"><div class="score-number">${totalLessons}</div><div class="score-label">الكل</div></div>
@@ -690,17 +743,45 @@
 
                 info.lessons.forEach((lesson, index) => {
                     let isDone = lesson.completed;
+                    let hasLink = lesson.link && lesson.link.trim() !== "";
                     html += `
                     <div class="lesson-card ${isDone ? 'completed' : ''}">
                         <div>
                             <strong style="color: #fff; font-size: 0.9rem;">${lesson.name}</strong>
                             <span style="display: block; font-size: 0.75rem; color: #e0b12b;">👨‍🏫 المدرس: ${lesson.teacher || 'غير محدد'}</span>
                         </div>
-                        <div>${!isDone ? `<button onclick="launchLessonDirect('${foundKey}', ${index}, '${lesson.link || 'https://meet.google.com/'}')" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem;">دخول المباشر 🚀</button>` : '<span style="color: #4ade80; font-size: 0.75rem;">تمت ✓</span>'}</div>
+                        <div>
+                            ${!isDone ? (hasLink ? `<button onclick="launchLessonDirect('${foundKey}', ${index}, '${lesson.link}')" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem;">دخول المباشر 🚀</button>` : '<span style="color: #e0b12b; font-size: 0.75rem;">في انتظار اللينك من الإدارة</span>') : '<span style="color: #4ade80; font-size: 0.75rem;">تمت ✓</span>'}
+                        </div>
                     </div>`;
                 });
                 container.innerHTML = html;
             } catch (e) { container.innerHTML = '<p style="color: #ff6b6b; text-align: center;">خطأ في الاتصال.</p>'; }
+        }
+
+        async function submitLaterPaymentProof(firebaseKey) {
+            const fileInput = document.getElementById(`uploadProofLater_${firebaseKey}`);
+            if (!fileInput.files || !fileInput.files[0]) { alert('برجاء اختيار صورة السكرين أولاً!'); return; }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Img = e.target.result;
+                try {
+                    const res = await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`);
+                    let student = await res.json();
+                    if (student) {
+                        student.paymentProof = base64Img;
+                        await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(student)
+                        });
+                        alert('✨ تم رفع السكرين بنجاح! سيتم مراجعته من الإدارة قريباً.');
+                        fetchStudentLessons();
+                    }
+                } catch(err) { alert('خطأ في الرفع.'); }
+            };
+            reader.readAsDataURL(fileInput.files[0]);
         }
 
         async function launchLessonDirect(firebaseKey, lessonIndex, meetingLink) {
@@ -709,8 +790,9 @@
                 let student = await res.json();
                 if (student) {
                     const info = ensureLessonsArray(student);
+                    let startTime = new Date();
                     info.lessons[lessonIndex].completed = true;
-                    info.lessons[lessonIndex].enteredAt = new Date().toISOString();
+                    info.lessons[lessonIndex].enteredAt = startTime.toISOString();
                     student.lessons = info.lessons;
 
                     await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`, {
@@ -721,7 +803,7 @@
 
                     window.open(meetingLink, '_blank');
                     
-                    activeLessonRatingInfo = { key: firebaseKey, index: lessonIndex, teacher: info.lessons[lessonIndex].teacher, studentName: student.fullName };
+                    activeLessonRatingInfo = { key: firebaseKey, index: lessonIndex, teacher: info.lessons[lessonIndex].teacher, studentName: student.fullName, startTime: startTime };
                     document.getElementById('ratingModal').style.display = 'flex';
                     fetchStudentLessons();
                 }
@@ -740,11 +822,29 @@
         async function submitTeacherRating() {
             const comment = document.getElementById('ratingComment').value.trim();
             if (activeLessonRatingInfo) {
+                let endTime = new Date();
+                let durationMinutes = Math.round((endTime - activeLessonRatingInfo.startTime) / 60000);
+                if(durationMinutes < 1) durationMinutes = 1;
+
+                try {
+                    const res = await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${activeLessonRatingInfo.key}.json`);
+                    let student = await res.json();
+                    if(student && student.lessons) {
+                        student.lessons[activeLessonRatingInfo.index].sessionDuration = durationMinutes;
+                        await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${activeLessonRatingInfo.key}.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(student)
+                        });
+                    }
+                } catch(e) {}
+
                 const ratingData = {
                     stars: selectedStars,
                     comment: comment,
                     teacher: activeLessonRatingInfo.teacher,
                     studentName: activeLessonRatingInfo.studentName,
+                    duration: durationMinutes + " دقائق",
                     timestamp: new Date().toISOString()
                 };
                 fetch('https://acadmy-4891f-default-rtdb.firebaseio.com/ratings.json', {
@@ -753,7 +853,7 @@
                     body: JSON.stringify(ratingData)
                 }).catch(e => {});
 
-                alert('شكراً لك! تم إرسال تقييمك للمدرس بنجاح.');
+                alert(`شكراً لك! تم احتساب مدة الحصة (${durationMinutes} دقيقة) وإرسال تقييمك للمدرس بنجاح.`);
                 document.getElementById('ratingModal').style.display = 'none';
                 loadRatings();
             }
@@ -790,6 +890,7 @@
                 cachedRatings = await resRatings.json() || {};
                 
                 calculateDashboardStats(cachedBookings);
+                renderTodaySchedule(cachedBookings);
                 renderAdminStudents(cachedBookings);
             } catch (e) {}
         }
@@ -804,7 +905,7 @@
                 if (s.lessons && Array.isArray(s.lessons)) {
                     completedLessons += s.lessons.filter(l => l.completed).length;
                 }
-                if (s.totalPrice) {
+                if (s.totalPrice && s.isPaidConfirmed) {
                     totalRev += parseInt(s.totalPrice) || 0;
                 }
             }
@@ -814,80 +915,142 @@
             document.getElementById('statTotalRevenue').innerText = totalRev + " ج";
         }
 
+        function renderTodaySchedule(data) {
+            const todayContainer = document.getElementById('todayScheduleContainer');
+            const daysNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const currentDayName = daysNames[new Date().getDay()];
+
+            let todayHTML = `<p style="color: #e0b12b; margin-bottom: 8px; font-weight: bold;">📅 اليوم: ${currentDayName}</p>`;
+            let foundToday = false;
+
+            for (let key in data) {
+                let s = data[key];
+                if (s.isPaidConfirmed && s.preferredDays && s.preferredDays.includes(currentDayName)) {
+                    foundToday = true;
+                    let firstLink = s.lessons && s.lessons[0] ? s.lessons[0].link : '';
+                    todayHTML += `
+                    <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border-right: 3px solid #e0b12b;">
+                        <div>
+                            <strong>${s.course}</strong> (${s.lessonHour || ''}) - طالب: ${s.fullName} (${s.phone})
+                        </div>
+                        ${firstLink ? `<a href="${firstLink}" target="_blank" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem; text-decoration: none;">دخول حصة اليوم 🚀</a>` : '<span style="color:#ff6b6b; font-size:0.75rem;">لم يضاف له لينك بعد</span>'}
+                    </div>`;
+                }
+            }
+
+            if (!foundToday) {
+                todayHTML += `<p style="color: #aaa; font-size: 0.85rem;">لا توجد حصص مؤكدة ومجدولة لهذا اليوم (${currentDayName}).</p>`;
+            }
+
+            todayContainer.innerHTML = todayHTML;
+        }
+
+        function filterAdminStudents() {
+            renderAdminStudents(cachedBookings);
+        }
+
         function renderAdminStudents(data) {
             const container = document.getElementById('allStudentsContainer');
+            const searchVal = document.getElementById('adminSearchInput').value.toLowerCase();
+            const sysVal = document.getElementById('systemFilter').value;
+
             let html = '';
             for (let key in data) {
                 let student = data[key];
+                
+                let matchesSearch = !searchVal || (student.fullName && student.fullName.toLowerCase().includes(searchVal)) || (student.phone && student.phone.includes(searchVal));
+                let matchesSys = (sysVal === 'ALL') || (student.educationSystem === sysVal);
+
+                if (!matchesSearch || !matchesSys) continue;
+
                 const info = ensureLessonsArray(student);
-                let completed = info.lessons.filter(l => l.completed).length;
-                let remaining = info.lessons.length - completed;
+                let isConfirmed = student.isPaidConfirmed || false;
+
+                let proofDisplay = 'بدون سكرين';
+                if (student.paymentProof && student.paymentProof.startsWith('data:image')) {
+                    proofDisplay = `<a href="${student.paymentProof}" target="_blank" style="color: #e0b12b; text-decoration: underline; font-weight: bold;">📷 اضغط هنا لمعاينة سكرين التحويل</a>`;
+                }
 
                 html += `
-                <div onclick="openStudentProfile('${key}')" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(224, 177, 43, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 12px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(224,177,43,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="background: ${isConfirmed ? 'rgba(255, 255, 255, 0.03)' : 'rgba(224, 177, 43, 0.08)'}; border: 1px solid ${isConfirmed ? 'rgba(224, 177, 43, 0.3)' : '#e0b12b'}; border-radius: 12px; padding: 15px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
                         <div>
-                            <h3 style="color: #e0b12b; font-size: 1.05rem; margin: 0 0 4px 0;">👤 ${student.fullName || 'بدون اسم'}</h3>
-                            <span style="color: #aaa; font-size: 0.8rem;">📞 ${student.phone} | المادة: ${student.course} | النظام: ${student.educationSystem}</span>
+                            <h3 style="color: #e0b12b; font-size: 1.05rem; margin: 0 0 4px 0;">👤 ${student.fullName || 'بدون اسم'} ${isConfirmed ? '✅ (مفعل)' : '⏳ (في انتظار السكرين/المراجعة)'}</h3>
+                            <span style="color: #aaa; font-size: 0.8rem;">📞 ${student.phone} | المادة: ${student.course} (${student.educationSystem}) | الساعة: ${student.lessonHour} | الأيام: ${student.preferredDays} | المبلغ: ${student.totalPrice}</span>
+                            <div style="margin-top: 5px; font-size: 0.85rem; color: #4ade80;">
+                                ${proofDisplay}
+                            </div>
                         </div>
-                        <div style="text-align: left;">
-                            <span style="color: #4ade80; font-size: 0.85rem; font-weight: bold;">حضرت: ${completed}</span> | 
-                            <span style="color: #ff6b6b; font-size: 0.85rem; font-weight: bold;">متبقي: ${remaining}</span>
+                        <div>
+                            <button onclick="toggleConfirmPayment('${key}', ${!isConfirmed})" class="btn-gold" style="padding: 4px 10px; font-size: 0.75rem; background: ${isConfirmed ? '#ff6b6b' : '#4ade80'}; color: #000; font-weight: bold;">
+                                ${isConfirmed ? 'إلغاء التفعيل' : 'تأكيد الدفع والتفعيل ✓'}
+                            </button>
                         </div>
                     </div>
-                </div>`;
+                    
+                    <h4 style="color: #fff; font-size: 0.85rem; margin-bottom: 6px;">تحديد لينك زوم/ميت لكل حصة للطالب:</h4>`;
+
+                info.lessons.forEach((lesson, idx) => {
+                    html += `
+                    <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 6px; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 6px;">
+                        <span style="color: #fff; font-size: 0.80rem; width: 80px;">${lesson.name}:</span>
+                        <input type="text" id="link_${key}_${idx}" value="${lesson.link || ''}" placeholder="ضع رابط زوم أو ميت هنا..." style="flex: 1; padding: 4px 8px; font-size: 0.8rem; border-radius: 4px; border: 1px solid #444; background: #000; color: #fff;">
+                        <button onclick="saveStudentLessonLink('${key}', ${idx})" style="background: #e0b12b; color: #000; border: none; border-radius: 4px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; font-weight: bold;">حفظ الرابط</button>
+                    </div>`;
+                });
+
+                html += `</div>`;
             }
 
-            container.innerHTML = html || '<p style="color: #ff6b6b; text-align: center;">لا توجد بيانات طلاب حالياً.</p>';
+            container.innerHTML = html || '<p style="color: #ff6b6b; text-align: center;">لا توجد طلبات حجوزات مطابقة للبحث.</p>';
         }
 
-        function openStudentProfile(key) {
-            let student = cachedBookings[key];
-            if (!student) return;
+        async function toggleConfirmPayment(firebaseKey, status) {
+            try {
+                await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}/isPaidConfirmed.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(status)
+                });
+                alert(status ? 'تم تأكيد الدفع وتفعيل الطالب بنجاح!' : 'تم إلغاء التفعيل.');
+                fetchAllAdminStudents();
+            } catch (e) { alert('خطأ في التحديث.'); }
+        }
 
-            const info = ensureLessonsArray(student);
-            let completed = info.lessons.filter(l => l.completed).length;
-            let remaining = info.lessons.length - completed;
-            let nextLesson = info.lessons.find(l => !l.completed);
-            let nextLessonText = nextLesson ? nextLesson.name + " (" + (student.preferredDays || 'غير محدد') + ")" : "تم استنفاد جميع الحصص ✓";
+        async function saveStudentLessonLink(firebaseKey, lessonIndex) {
+            const linkVal = document.getElementById(`link_${firebaseKey}_${lessonIndex}`).value.trim();
+            try {
+                const res = await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`);
+                let student = await res.json();
+                if (student) {
+                    const info = ensureLessonsArray(student);
+                    info.lessons[lessonIndex].link = linkVal;
+                    student.lessons = info.lessons;
 
-            let studentRatingsHTML = '';
-            let foundRatings = false;
-            for (let rKey in cachedRatings) {
-                let r = cachedRatings[rKey];
-                if (r.studentName === student.fullName) {
-                    foundRatings = true;
-                    studentRatingsHTML += `<p style="font-size: 0.8rem; color: #ccc; margin: 4px 0;">⭐ ${r.stars} نجوم للمدرس (${r.teacher}): "${r.comment || 'بدون تعليق'}"</p>`;
+                    await fetch(`https://acadmy-4891f-default-rtdb.firebaseio.com/bookings/${firebaseKey}.json`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(student)
+                    });
+                    alert('تم حفظ رابط الحصة بنجاح للطالب!');
+                    fetchAllAdminStudents();
                 }
-            }
-            if (!foundRatings) {
-                studentRatingsHTML = '<p style="font-size: 0.8rem; color: #777;">لم يتم تسجيل تقييمات بعد من هذا الطالب.</p>';
-            }
-
-            let profileHtml = `
-                <div style="font-size: 0.9rem; color: #fff; line-height: 1.6;">
-                    <p><b>اسم الطالب:</b> ${student.fullName}</p>
-                    <p><b>رقم الهاتف:</b> ${student.phone}</p>
-                    <p><b>المادة الدراسية:</b> ${student.course}</p>
-                    <p><b>النظام التعليمي:</b> ${student.educationSystem}</p>
-                    <p><b>الأيام المختارة أسبوعياً:</b> <span style="color: #e0b12b;">${student.preferredDays || 'غير محدد'}</span></p>
-                    <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
-                    <p><b>إجمالي الحصص المحجوزة:</b> ${info.lessons.length}</p>
-                    <p><b>الحصص التي تم حضورها:</b> <span style="color: #4ade80;">${completed} حصص</span></p>
-                    <p><b>الحصص المتبقية:</b> <span style="color: #ff6b6b;">${remaining} حصص</span></p>
-                    <p><b>ميعاد الحصة القادمة:</b> <b style="color: #e0b12b;">${nextLessonText}</b></p>
-                    <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
-                    <h4 style="color: #e0b12b; font-size: 0.95rem; margin-bottom: 5px;">تقييمات الطالب للمدرسين:</h4>
-                    ${studentRatingsHTML}
-                </div>
-            `;
-
-            document.getElementById('studentProfileContent').innerHTML = profileHtml;
-            document.getElementById('studentProfileModal').style.display = 'flex';
+            } catch (e) { alert('خطأ في حفظ الرابط.'); }
         }
 
-        function closeStudentModal() {
-            document.getElementById('studentProfileModal').style.display = 'none';
+        function exportToCSV() {
+            let csvContent = "\uFEFFالاسم,الهاتف,المادة,النظام,الإجمالي,الحالة,الأيام,الساعة\n";
+            for (let k in cachedBookings) {
+                let s = cachedBookings[k];
+                let status = s.isPaidConfirmed ? "مفعل" : "قيد المراجعة";
+                csvContent += `"${s.fullName || ''}","${s.phone || ''}","${s.course || ''}","${s.educationSystem || ''}","${s.totalPrice || ''}","${status}","${s.preferredDays || ''}","${s.lessonHour || ''}"\n`;
+            }
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = 'edu_zone_bookings.csv';
+            a.click();
         }
     </script>
 </body>
